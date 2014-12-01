@@ -1,0 +1,50 @@
+{
+    "name": "jongotlin/affiliate-reports",
+    "license": "MIT",
+    "type": "project",
+    "description": "Get daily emails with yesterday's affiliate transactions",
+    "autoload": {
+        "psr-0": { "": "src/", "SymfonyStandard": "app/" }
+    },
+    "require": {
+        "php": ">=5.3.3",
+        "symfony/symfony": "2.6.*",
+        "twig/extensions": "~1.0",
+        "symfony/swiftmailer-bundle": "~2.3",
+        "symfony/monolog-bundle": "~2.4",
+        "sensio/distribution-bundle": "~3.0",
+        "incenteev/composer-parameter-handler": "~2.0",
+        "guzzle/guzzle": "3.*",
+        "jongotlin/adrecord-api-wrapper": "0.0.2",
+        "jongotlin/tradedoubler-reports-wrapper": "0.0.3",
+        "jongotlin/affiliate-interfaces": "0.1.1"
+    },
+    "scripts": {
+        "post-root-package-install": [
+            "SymfonyStandard\\Composer::hookRootPackageInstall"
+        ],
+        "post-install-cmd": [
+            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::removeSymfonyStandardFiles"
+        ],
+        "post-update-cmd": [
+            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::removeSymfonyStandardFiles"
+        ]
+    },
+    "config": {
+        "bin-dir": "bin"
+    },
+    "extra": {
+        "symfony-app-dir": "app",
+        "incenteev-parameters": {
+            "file": "app/config/parameters.yml"
+        }
+    }
+}

@@ -1,0 +1,44 @@
+services:
+
+    transaction_fetcher:
+        class: AppBundle\Service\TransactionFetcher
+        arguments:
+            - @adrecord
+            - @tradedoubler
+
+    command.daily:
+        class: AppBundle\Command\DailyReportCommand
+        arguments:
+            - @transaction_fetcher
+            - @email_sender
+        tags:
+            - { name: console.command }
+
+    guzzle_client:
+        class: Guzzle\Http\Client
+
+    adrecord:
+        class: AdrecordApiWrapper\Adrecord
+        arguments:
+            - %adrecord_key%
+            - @guzzle_client
+
+    tradedoubler:
+        class: TradedoublerReportWrapper\Tradedoubler
+        arguments:
+            - %tradedoubler_key%
+            - %tradedoubler_organization_id%
+            - @guzzle_client
+
+    email_sender:
+        class: AppBundle\Service\EmailSender
+        arguments:
+            - @mailer
+            - @templating
+            - %mailer_from%
+            - %mailer_recipients%
+
+    twig.extension:
+        class: AppBundle\Twig\AppExtension
+        tags:
+            - { name: twig.extension }
