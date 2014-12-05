@@ -32,6 +32,23 @@ class TransactionFetcher
      */
     public function getTransactions()
     {
+        $transactions = array_merge(
+            $this->getAdrecordAtransactions(),
+            $this->getTradedoublerTransactions()
+        );
+
+        usort($transactions, function($a, $b) {
+            return $a->getCreatedAt() > $b->getCreatedAt();
+        });
+
+        return $transactions;
+    }
+
+    /**
+     * @return \AdrecordApiWrapper\Transaction[]
+     */
+    protected function getAdrecordAtransactions()
+    {
         $adrecordTransactions = $this->adrecord->getTransactions(
             null,
             null,
@@ -39,16 +56,35 @@ class TransactionFetcher
             new \DateTime('-1 day')
         );
 
-        $tradedoublerTransactions = $this->tradedoubler->getTransactions(
+        return $this->fillWithAdrecordChannelData($adrecordTransactions);
+    }
+
+    /**
+     * @return \TradedoublerReportWrapper\Transaction[]
+     */
+    protected function getTradedoublerTransactions()
+    {
+        return $this->tradedoubler->getTransactions(
             new \DateTime('-1 day'),
             new \DateTime('-1 day')
         );
+    }
 
-        $transactions = array_merge($adrecordTransactions, $tradedoublerTransactions);
+    /**
+     * @param \AdrecordApiWrapper\Transaction[] $transactions
+     *
+     * @return \AdrecordApiWrapper\Transaction[]
+     */
+    protected function fillWithAdrecordChannelData($transactions)
+    {
+        $channels = [];
+        foreach ($this->adrecord->getChannels() as $channel) {
+            $channels[$channel->getOriginalId()] = $channel;
+        }
 
-        usort($transactions, function($a, $b) {
-            return $a->getCreatedAt() > $b->getCreatedAt();
-        });
+        foreach ($transactions as $transaction) {
+            $transaction->getChannel()->setName($channels[$transaction->getChannel()->getOriginalId()]->getName());
+        }
 
         return $transactions;
     }

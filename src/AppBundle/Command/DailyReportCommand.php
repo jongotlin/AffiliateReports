@@ -44,6 +44,22 @@ class DailyReportCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->emailSender->sendEmail($this->transactionFetcher->getTransactions());
+        $transactions = $this->transactionFetcher->getTransactions();
+
+        $total = 0;
+        $perChannel = [];
+        foreach ($transactions as $transaction) {
+            $total += $transaction->getCommission();
+            if (!array_key_exists($transaction->getChannel()->getName(), $perChannel)) {
+                $perChannel[$transaction->getChannel()->getName()] = 0;
+            }
+            $perChannel[$transaction->getChannel()->getName()] += $transaction->getCommission();
+        }
+
+        $this->emailSender->sendEmail(
+            $transactions,
+            $total,
+            $perChannel
+        );
     }
 }

@@ -19,8 +19,22 @@
                 <table style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 100%; line-height: 1.6; width: 100%; margin: 0; padding: 0;">
                     <tr style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 100%; line-height: 1.6; margin: 0; padding: 0;">
                         <td style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 100%; line-height: 1.6; margin: 0; padding: 0;">
-                            <h1 style="font-family: 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif; font-size: 36px; line-height: 1.2; color: #000; font-weight: 200; margin: 0; padding: 0;">Gårdagens försäljningar</h1>
-                            <h2 style="font-family: 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif; font-size: 28px; line-height: 1.2; color: #000; font-weight: 200; margin: 10px 0 20px; padding: 0;">Totalt {{ total|price }}</h2>
+                            <h1 style="font-family: 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif; font-size: 36px; line-height: 1.2; color: #000; font-weight: 200; margin: 0; padding: 0; text-align: center;">Gårdagens försäljningar</h1>
+                            <h2 style="font-family: 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif; font-size: 28px; line-height: 1.2; color: #000; font-weight: 200; margin: 20px 0 20px; padding: 0; text-align: center;">
+                                <span style="border: solid 2px #ccc; padding: 4px 8px">{{ total|price }}</span>
+                            </h2>
+                            <table style="width:100%; margin: 0 0 20px 0; padding: 0;" cellspacing="0">
+                            {% for channel, amount in perChannel %}
+                                <tr style="margin: 0; padding: 0;">
+                                    <td style="margin: 0; padding: 2px 5px; font-weight: bold;">
+                                        {{ channel }}
+                                    </td>
+                                    <td style="margin: 0; padding: 2px 5px; text-align: right; font-weight: bold;">
+                                        {{ amount|price }}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </table>
                             <table style="width:100%; margin: 0; padding: 0;" cellspacing="0">
                                 {% for transaction in transactions %}
                                     <tr style="margin: 0; padding: 0;">

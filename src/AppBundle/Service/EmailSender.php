@@ -42,14 +42,11 @@ class EmailSender
 
     /**
      * @param \AffiliateInterface\TransactionInterface[] $transactions
+     * @param int                                        $total
+     * @param int[]                                      $perChannel
      */
-    public function sendEmail(array $transactions)
+    public function sendEmail(array $transactions, $total, $perChannel)
     {
-        $total = 0;
-        foreach ($transactions as $transaction) {
-            $total += $transaction->getCommission();
-        }
-
         $message = \Swift_Message::newInstance()
             ->setSubject('Gårdagens försäljningar')
             ->setFrom($this->from)
@@ -60,6 +57,7 @@ class EmailSender
                     [
                         'transactions' => $transactions,
                         'total' => $total,
+                        'perChannel' => $perChannel,
                     ]
                 ),
                 'text/html'
