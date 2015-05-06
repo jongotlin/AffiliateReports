@@ -56,10 +56,12 @@ class DailyReportCommand extends Command
             $perChannel[$transaction->getChannel()->getName()] += $transaction->getCommission();
         }
 
-        $this->emailSender->sendEmail(
-            $transactions,
-            $total,
-            $perChannel
-        );
+        if ($total > 0) {
+            $this->emailSender->sendEmail(
+                $transactions,
+                $total,
+                $perChannel
+            );
+        }
     }
 }
